@@ -3,16 +3,31 @@ import { PrismaClient } from '../generated/prisma/client';
 
 const prismaClientSingleton = () => {
   // DATABASE_URL 파싱
-  const dbUrl = new URL(process.env.DATABASE_URL!);
-  const adapter = new PrismaMariaDb({
-    host: dbUrl.hostname,
-    port: parseInt(dbUrl.port || '3306'),
-    user: dbUrl.username,
-    password: dbUrl.password,
-    database: dbUrl.pathname.substring(1),
-  });
+  const databaseUrl = process.env.DATABASE_URL;
   
-  return new PrismaClient({ adapter });
+  if (!databaseUrl) {
+    if (process.env.NODE_ENV === 'production') {
+      console.warn('DATABASE_URL is not set in production!');
+    }
+    // Build time check or development fallback
+    return new PrismaClient(); 
+  }
+
+  try {
+    const dbUrl = new URL(databaseUrl);
+    const adapter = new PrismaMariaDb({
+      host: dbUrl.hostname,
+      port: parseInt(dbUrl.port || '3306'),
+      user: dbUrl.username,
+      password: dbUrl.password,
+      database: dbUrl.pathname.substring(1),
+    });
+    
+    return new PrismaClient({ adapter });
+  } catch (error) {
+    console.error('Failed to parse DATABASE_URL:', error);
+    return new PrismaClient();
+  }
 };
 
 declare global {
