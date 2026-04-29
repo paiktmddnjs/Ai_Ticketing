@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ticketingbackend",
+  "main": ".open-next/worker.js", // OpenNext가 만든 실행 파일을 지정
+  "compatibility_date": "2026-04-29",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets", // 정적 파일 위치 지정
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
