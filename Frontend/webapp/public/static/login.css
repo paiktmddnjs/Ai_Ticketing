@@ -1,0 +1,20 @@
+.input-focus { transition: all .2s; }
+.input-focus:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,.15); }
+.btn-main { background: linear-gradient(135deg,#667eea,#764ba2); transition: opacity .2s, transform .1s; }
+.btn-main:hover { opacity: .92; transform: translateY(-1px); }
+.btn-main:active { transform: translateY(0); }
+.card-glow { box-shadow: 0 20px 60px rgba(102,126,234,.18), 0 2px 12px rgba(0,0,0,.06); }
+.social-btn { transition: all .2s; border: 1.5px solid #e5e7eb; }
+.social-btn:hover { border-color: #667eea; background: #f5f3ff; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(24px);} to { opacity:1; transform:translateY(0);} }
+.fade-up { animation: fadeUp .5s ease both; }
+@keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:.5} 50%{transform:scale(1.08);opacity:1} }
+.pulse { animation: pulse-ring 2.4s ease-in-out infinite; }
+.divider { display:flex; align-items:center; gap:12px; color:#9ca3af; font-size:.8rem; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:#e5e7eb; }
+
+/* Signup specific */
+.pw-bar { height: 4px; border-radius: 2px; transition: all .4s; }
+.check-item { display:flex; align-items:center; gap:6px; font-size:.75rem; transition: color .2s; }
+.check-item.ok  { color:#10b981; }
+.check-item.fail{ color:#9ca3af; }

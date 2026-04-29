@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+:root {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.seat {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.seat-available-VIP { background: #fffbeb; border: 2px solid #fcd34d; color: #b45309; }
+.seat-available-R { background: #eff6ff; border: 2px solid #93c5fd; color: #1d4ed8; }
+.seat-available-S { background: #f0fdf4; border: 2px solid #86efac; color: #15803d; }
+.seat-available-A { background: #f9fafb; border: 2px solid #d1d5db; color: #374151; }
+
+.seat-selected {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  border: 2px solid #4f46e5 !important;
+  color: white !important;
+  transform: scale(1.1);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
+}
+
+.seat-booked {
+  background: #f3f4f6;
+  border: 2px solid #e5e7eb;
+  color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.chat-bubble-ai {
+  background: #f3f4f6;
+  border-radius: 0 16px 16px 16px;
+  color: #374151;
+}
+
+.chat-bubble-user {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16px 0 16px 16px;
+  color: white;
+}
+
+.ai-typing::after {
+  content: '...';
+  display: inline-block;
+  width: 12px;
+  animation: typing 1s infinite;
+}
+
+@keyframes typing {
+  0% { content: '.'; }
+  33% { content: '..'; }
+  66% { content: '...'; }
+}
+
+.ticket-bg {
+  background-image: radial-gradient(circle at 0% 50%, transparent 10px, white 10px),
+                    radial-gradient(circle at 100% 50%, transparent 10px, white 10px);
+}

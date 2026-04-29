@@ -1,0 +1,11 @@
+.seat { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; transition: all 0.15s; cursor: pointer; border: 2px solid transparent; }
+.seat-available-VIP { background: #fef3c7; border-color: #f59e0b; color: #92400e; }
+.seat-available-R { background: #dbeafe; border-color: #3b82f6; color: #1e40af; }
+.seat-available-S { background: #d1fae5; border-color: #10b981; color: #065f46; }
+.seat-available-A { background: #f3f4f6; border-color: #9ca3af; color: #374151; }
+.seat-booked { background: #e5e7eb; border-color: #d1d5db; color: #9ca3af; cursor: not-allowed; opacity: 0.5; }
+.seat-selected { background: linear-gradient(135deg, #667eea, #764ba2) !important; border-color: #4f46e5 !important; color: white !important; transform: scale(1.15); }
+.seat-available-VIP:hover:not(.seat-booked) { transform: scale(1.15); background: #fde68a; }
+.seat-available-R:hover:not(.seat-booked) { transform: scale(1.15); background: #bfdbfe; }
+.seat-available-S:hover:not(.seat-booked) { transform: scale(1.15); background: #a7f3d0; }
+.seat-available-A:hover:not(.seat-booked) { transform: scale(1.15); background: #e5e7eb; }

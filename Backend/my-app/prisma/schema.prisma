@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Category {
+  concert
+  musical
+  sports
+  theater
+}
+
+enum Zone {
+  VIP
+  R
+  S
+  A
+}
+
+enum SeatStatus {
+  available
+  booked
+  held
+}
+
+enum BookingStatus {
+  confirmed
+  cancelled
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  name       String
+  password   String?
+  googleId   String?   @unique
+  created_at DateTime? @default(now())
+  bookings   Booking[]
+
+  @@map("users")
+}
+
+model Event {
+  id              String       @id @default(uuid())
+  title           String
+  artist          String
+  category        Category
+  event_date      DateTime     @db.Date
+  event_time      DateTime     @db.Time
+  venue           String
+  total_seats     Int
+  available_seats Int
+  description     String?      @db.Text
+  image           String?
+  created_at      DateTime?    @default(now())
+  prices          EventPrice[]
+  seats           Seat[]
+  bookings        Booking[]
+
+  @@map("events")
+}
+
+model EventPrice {
+  event_id String
+  zone     Zone
+  price    Int
+  event    Event  @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@id([event_id, zone])
+  @@map("event_prices")
+}
+
+model Seat {
+  id           String       @id
+  event_id     String
+  zone         Zone
+  seat_row     String       @db.VarChar(10)
+  seat_number  Int
+  price        Int
+  status       SeatStatus   @default(available)
+  event        Event        @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  bookingSeats BookingSeat[]
+
+  @@unique([event_id, zone, seat_row, seat_number], name: "unique_event_seat_pos")
+  @@map("seats")
+}
+
+model Booking {
+  id           String        @id @default(uuid())
+  user_id      String?
+  event_id     String
+  booker_name  String
+  total_price  Int
+  status       BookingStatus @default(confirmed)
+  booked_at    DateTime?     @default(now())
+  user         User?         @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  event        Event         @relation(fields: [event_id], references: [id], onDelete: Restrict)
+  bookingSeats BookingSeat[]
+
+  @@map("bookings")
+}
+
+model BookingSeat {
+  id          Int     @id @default(autoincrement())
+  booking_id  String
+  seat_id     String
+  zone        Zone
+  seat_row    String  @db.VarChar(10)
+  seat_number Int
+  price       Int
+  booking     Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+  seat        Seat    @relation(fields: [seat_id], references: [id], onDelete: Restrict)
+
+  @@unique([booking_id, seat_id], name: "unique_booking_seat")
+  @@map("booking_seats")
+}
+
