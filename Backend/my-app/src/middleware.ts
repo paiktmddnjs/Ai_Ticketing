@@ -1,3 +1,7 @@
+// CORS is now handled in next.config.ts. 
+// If you need more complex middleware logic in the future, you can add it here.
+
+/*
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -28,3 +32,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: '/api/:path*',
 };
+*/
+
+export function middleware() {}
