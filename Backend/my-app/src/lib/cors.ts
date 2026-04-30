@@ -16,7 +16,7 @@ export function withCors(response: NextResponse) {
 
 export function corsOptionsResponse() {
   return new NextResponse(null, {
-    status: 204,
+    status: 200,
     headers: CORS_HEADERS,
   });
 }

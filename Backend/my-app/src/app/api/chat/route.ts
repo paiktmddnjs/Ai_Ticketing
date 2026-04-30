@@ -1,6 +1,11 @@
 // app/api/chat/route.ts
 import { NextResponse } from 'next/server';
-import { analyzeBookingIntent } from '@/lib/services/chatService'; // 분리한 서비스 불러오기
+import { analyzeBookingIntent } from '@/lib/services/chatService';
+import { withCors, corsOptionsResponse } from '@/lib/cors';
+
+export async function OPTIONS() {
+  return corsOptionsResponse();
+}
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +16,7 @@ export async function POST(req: Request) {
 
     // AI 결과에 따라 프론트엔드로 응답 쏴주기
     if (aiResponse.isBookingIntent && aiResponse.eventId) {
-      return NextResponse.json({
+      return withCors(NextResponse.json({
         type: 'booking_intent',
         data: {
           eventId: aiResponse.eventId,
@@ -19,19 +24,19 @@ export async function POST(req: Request) {
           zone: aiResponse.zone,
           count: aiResponse.count,
         }
-      });
+      }));
     } else {
-      return NextResponse.json({
+      return withCors(NextResponse.json({
         type: 'chat',
         text: aiResponse.text
-      });
+      }));
     }
     
   } catch (error) {
     console.error("AI API Error:", error);
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { type: 'chat', text: '죄송합니다. 서버와 연결하는 중 문제가 발생했습니다.' }, 
       { status: 500 }
-    );
+    ));
   }
 }
