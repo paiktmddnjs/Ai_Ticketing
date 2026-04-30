@@ -8,9 +8,7 @@ export const CORS_HEADERS = {
 };
 
 export function withCors(response: NextResponse) {
-  Object.entries(CORS_HEADERS).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
+  // CORS is now handled globally in middleware.ts
   return response;
 }
 
