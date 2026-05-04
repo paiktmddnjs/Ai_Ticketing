@@ -1,5 +1,5 @@
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
-import { PrismaClient } from '../generated/prisma/client';
+import { PrismaClient } from '../generated/prisma';
 
 const prismaClientSingleton = () => {
   // DATABASE_URL 파싱
@@ -10,7 +10,7 @@ const prismaClientSingleton = () => {
       console.warn('DATABASE_URL is not set in production!');
     }
     // Build time check or development fallback
-    return new PrismaClient(); 
+    return new PrismaClient();
   }
 
   try {

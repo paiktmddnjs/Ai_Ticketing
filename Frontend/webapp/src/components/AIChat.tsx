@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { BASE_URL } from '../api/client';
 
 // AI 서버에서 반환받는 예매 정보의 형태
 interface BookingIntent {
@@ -59,7 +60,7 @@ export const AIChat = () => {
 
     try {
       // ✅ 텍스트 분석은 프론트가 아니라 백엔드(/api/chat)에 온전히 맡깁니다.
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: msg }),
@@ -111,7 +112,7 @@ export const AIChat = () => {
 
     try {
       // ✅ 실제 예매 확정 처리 (서버의 DB에 저장)
-      const response = await fetch('/api/bookings', {
+      const response = await fetch(`${BASE_URL}/api/bookings`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
