@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json();
-    
+
     if (!data.event_id || !data.booker_name || !data.seats || data.seats.length === 0) {
       return withCors(NextResponse.json({ message: '필수 필드가 누락되었습니다.' }, { status: 400 }));
     }
@@ -44,9 +44,13 @@ export async function POST(request: NextRequest) {
       code: error.code,
       meta: error.meta
     });
-    return withCors(NextResponse.json({ 
-      message: error.message || '서버 내부 오류가 발생했습니다.',
-      error: process.env.NODE_ENV === 'development' ? error : undefined
-    }, { status: 500 }));
+
+    const errorMessage = error.message || '서버 내부 오류가 발생했습니다.';
+    const isLogicError = errorMessage.includes('일부 좌석') || errorMessage.includes('예약되었거나') || errorMessage.includes('찾을 수 없습니다');
+
+    return withCors(NextResponse.json({
+      message: errorMessage,
+      error: String(error) // Always expose the error string for debugging
+    }, { status: isLogicError ? 400 : 500 }));
   }
 }

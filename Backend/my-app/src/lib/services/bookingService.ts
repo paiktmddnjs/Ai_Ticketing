@@ -68,6 +68,9 @@ export const bookingService = {
       });
 
       return booking;
+    }, {
+      maxWait: 5000, // 트랜잭션을 시작하기 위해 대기하는 최대 시간 (기본값 2000ms)
+      timeout: 15000  // 트랜잭션 전체가 완료되어야 하는 시간 (기본값 5000ms)
     });
   },
 
@@ -104,6 +107,9 @@ export const bookingService = {
       });
 
       return { status: 'success', message: '예매가 취소되었습니다.' };
+    }, {
+      maxWait: 5000,
+      timeout: 15000
     });
   },
 
