@@ -37,7 +37,16 @@ export async function POST(request: NextRequest) {
 
     return withCors(NextResponse.json(result));
   } catch (error: any) {
-    console.error('Booking error:', error);
-    return withCors(NextResponse.json({ message: error.message || '서버 내부 오류가 발생했습니다.' }, { status: 500 }));
+    console.error('Booking error detail:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code,
+      meta: error.meta
+    });
+    return withCors(NextResponse.json({ 
+      message: error.message || '서버 내부 오류가 발생했습니다.',
+      error: process.env.NODE_ENV === 'development' ? error : undefined
+    }, { status: 500 }));
   }
 }

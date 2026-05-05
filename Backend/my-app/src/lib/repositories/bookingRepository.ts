@@ -9,8 +9,9 @@ export const bookingRepository = {
     });
   },
 
-  async findById(id: string) {
-    return prisma.booking.findUnique({
+  async findById(id: string, tx?: Prisma.TransactionClient) {
+    const client = tx || prisma;
+    return client.booking.findUnique({
       where: { id },
       include: {
         event: true,

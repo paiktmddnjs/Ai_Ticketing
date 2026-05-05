@@ -2,8 +2,9 @@ import prisma from '@/lib/prisma';
 import { Prisma } from '@/generated/prisma/client';
 
 export const seatRepository = {
-  async findManyByIds(ids: string[], event_id?: string) {
-    return prisma.seat.findMany({
+  async findManyByIds(ids: string[], event_id?: string, tx?: Prisma.TransactionClient) {
+    const client = tx || prisma;
+    return client.seat.findMany({
       where: {
         id: { in: ids },
         ...(event_id ? { event_id } : {}),
