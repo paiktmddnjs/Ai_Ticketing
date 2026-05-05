@@ -1,6 +1,9 @@
 import 'dotenv/config';
 import prisma from '../src/lib/prisma';
-import { Category, Zone, Prisma } from '../src/generated/prisma/client.ts';
+import type { Prisma } from '../src/generated/prisma/client';
+
+type Category = 'concert' | 'musical' | 'sports' | 'theater';
+type Zone = 'VIP' | 'R' | 'S' | 'A';
 
 // DATABASE_URL 파싱 (mysql://user:pass@host:port/db)
 async function main() {
