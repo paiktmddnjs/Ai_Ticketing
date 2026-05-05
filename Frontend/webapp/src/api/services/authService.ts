@@ -25,7 +25,7 @@ const MOCK_USER: User = {
 };
 */
 
-export const GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_URL || 'https://my-app-eta-sage-27.vercel.app'}/api/auth/google`;
+export const GOOGLE_AUTH_URL = `${import.meta.env.VITE_API_URL || 'https://ticket-ai-server.vercel.app'}/api/auth/google`;
 
 export const authService = {
   /**
