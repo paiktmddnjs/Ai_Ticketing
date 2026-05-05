@@ -6,11 +6,19 @@ import { eventRepository } from '../repositories/eventRepository';
 export const bookingService = {
   async createBooking({ event_id, booker_name, seatIds, user_id }: any) {
     return await prisma.$transaction(async (tx: any) => {
-      // 1. 좌석 가용 여부 확인 (트랜잭션 내에서 조회)
+      // 1. 좌석 가용 여부 확인 (필요한 컬럼만 select 하여 오버헤드 감소)
       const seats = await tx.seat.findMany({
         where: {
           id: { in: seatIds },
           event_id: event_id
+        },
+        select: {
+          id: true,
+          zone: true,
+          seat_row: true,
+          seat_number: true,
+          price: true,
+          status: true
         }
       });
 
@@ -26,7 +34,7 @@ export const bookingService = {
       // 2. 총 가격 계산
       const totalPrice = seats.reduce((sum: number, s: any) => sum + s.price, 0);
 
-      // 3. 예매 정보 및 좌석 상세 정보 생성 (중첩 create 사용)
+      // 3. 예매 정보 생성 (중첩 create 사용)
       const bookingId = `BK-${Math.random().toString(36).substring(2, 11).toUpperCase()}`;
       
       const booking = await tx.booking.create({
@@ -47,30 +55,31 @@ export const bookingService = {
             }))
           }
         },
+        // 불필요한 event 전체 조회를 제거하고 꼭 필요한 정보만 포함
         include: {
-          event: true,
           bookingSeats: true,
         }
       });
 
-      // 4. 좌석 상태를 예약됨(booked)으로 변경
-      await tx.seat.updateMany({
-        where: { id: { in: seatIds } },
-        data: { status: 'booked' }
-      });
-
-      // 5. 이벤트의 남은 좌석 수 차감
-      await tx.event.update({
-        where: { id: event_id },
-        data: {
-          available_seats: { decrement: seatIds.length },
-        }
-      });
+      // 4. 좌석 상태 변경 및 이벤트 남은 좌석 수 차감을 병렬로 실행
+      // 트랜잭션 내에서 서로 다른 테이블을 업데이트하므로 병렬 처리가 가능하며 RTT를 줄여줍니다.
+      await Promise.all([
+        tx.seat.updateMany({
+          where: { id: { in: seatIds } },
+          data: { status: 'booked' }
+        }),
+        tx.event.update({
+          where: { id: event_id },
+          data: {
+            available_seats: { decrement: seatIds.length },
+          }
+        })
+      ]);
 
       return booking;
     }, {
-      maxWait: 5000, // 트랜잭션을 시작하기 위해 대기하는 최대 시간 (기본값 2000ms)
-      timeout: 15000  // 트랜잭션 전체가 완료되어야 하는 시간 (기본값 5000ms)
+      maxWait: 5000,
+      timeout: 15000
     });
   },
 
