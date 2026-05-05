@@ -19,6 +19,13 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
+  const error = searchParams.get('error');
+
+  if (error === 'access_denied' || error) {
+    // 날것의 JSON을 보여주지 않고, 로그인 페이지로 다시 돌려보냅니다.
+    // 쿼리 파라미터로 에러 상태를 넘겨서, 프론트 단에서 "로그인이 취소되었습니다" 같은 알림을 띄우게 할 수도 있습니다.
+    return NextResponse.redirect(new URL('/login?message=cancelled', request.url));
+  }
 
   if (!code) {
     return NextResponse.json({ error: 'Code is required' }, { status: 400 });
