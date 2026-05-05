@@ -2,7 +2,7 @@
  * Base API Client using fetch
  */
 
-export const BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-ticketing-smoky.vercel.app';
+export const BASE_URL = import.meta.env.VITE_API_URL || 'https://my-app-eta-sage-27.vercel.app';
 
 export async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${endpoint}`;

@@ -15,12 +15,22 @@ const prismaClientSingleton = () => {
 
   try {
     const dbUrl = new URL(databaseUrl);
+    const requiresSsl = dbUrl.searchParams.get('ssl-mode')?.toUpperCase() === 'REQUIRED';
+    const caCertificate = process.env.DATABASE_CA_CERT || process.env.AIVEN_CA_CERT;
     const adapter = new PrismaMariaDb({
       host: dbUrl.hostname,
       port: parseInt(dbUrl.port || '3306'),
-      user: dbUrl.username,
-      password: dbUrl.password,
+      user: decodeURIComponent(dbUrl.username),
+      password: decodeURIComponent(dbUrl.password),
       database: dbUrl.pathname.substring(1),
+      connectTimeout: 10000,
+      acquireTimeout: 20000,
+      initializationTimeout: 20000,
+      ssl: requiresSsl
+        ? caCertificate
+          ? { ca: caCertificate.replace(/\\n/g, '\n'), rejectUnauthorized: true }
+          : { rejectUnauthorized: false }
+        : undefined,
     });
     
     return new PrismaClient({ adapter });
